@@ -25,7 +25,7 @@ chzzk_highlight_ext/
 
 ## 🚀 설치 방법
 
-1. 이 리포지토리 우측상단 초록색 <code> 버튼 누르고 ZIP으로 다운로드하거나 `git clone`
+1. 이 리포지토리 우측상단 초록색 'code' 버튼 누르고 ZIP으로 다운로드하거나 `git clone`
 2. 다운로드한 zip 파일 압축해제
 3. 크롬 브라우저에서 `chrome://extensions/` 접속
 4. 우측 상단 **개발자 모드** 토글 켜기
