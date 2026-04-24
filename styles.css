@@ -341,6 +341,32 @@
     font-family: monospace;
 }
 
+/* 시간 직접 입력 필드 */
+.chzzk-fp-time-input {
+    width: 52px;
+    flex-shrink: 0;
+    background: rgba(0, 255, 163, 0.07);
+    border: 1px solid rgba(0, 255, 163, 0.25);
+    border-radius: 4px;
+    color: #00ffa3;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: monospace;
+    text-align: center;
+    padding: 2px 4px;
+    outline: none;
+    cursor: text;
+    transition: border-color 0.15s, background 0.15s;
+}
+.chzzk-fp-time-input:hover {
+    border-color: rgba(0, 255, 163, 0.5);
+    background: rgba(0, 255, 163, 0.12);
+}
+.chzzk-fp-time-input:focus {
+    border-color: #00ffa3;
+    background: rgba(0, 255, 163, 0.18);
+}
+
 /* Range 슬라이더 커스텀 스타일 */
 .chzzk-range-slider {
     flex: 1;

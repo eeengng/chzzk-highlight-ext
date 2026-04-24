@@ -348,13 +348,15 @@ function renderFloatPanel(highlights, chatTimes, videoId, vodDurationSec, rangeS
                     <span class="chzzk-fp-slider-label">시작</span>
                     <input type="range" id="CHZZK_RANGE_START" class="chzzk-range-slider"
                         min="0" max="100" value="${startPct}" step="1">
-                    <span class="chzzk-fp-slider-val" id="CHZZK_START_VAL">${formatTime(rangeStart)}</span>
+                    <input type="text" class="chzzk-fp-time-input" id="CHZZK_START_VAL"
+                        value="${formatTime(rangeStart)}" placeholder="0:00" title="시간 직접 입력 (예: 5:30 또는 1:23:45)">
                 </div>
                 <div class="chzzk-fp-slider-row">
                     <span class="chzzk-fp-slider-label">종료</span>
                     <input type="range" id="CHZZK_RANGE_END" class="chzzk-range-slider"
                         min="0" max="100" value="${endPct}" step="1">
-                    <span class="chzzk-fp-slider-val" id="CHZZK_END_VAL">${formatTime(rangeEnd)}</span>
+                    <input type="text" class="chzzk-fp-time-input" id="CHZZK_END_VAL"
+                        value="${formatTime(rangeEnd)}" placeholder="0:00" title="시간 직접 입력 (예: 5:30 또는 1:23:45)">
                 </div>
                 <div class="chzzk-fp-filter-range-preview" id="CHZZK_RANGE_PREVIEW">
                     분석 구간: <strong>${formatTime(rangeStart)}</strong> ~ <strong>${formatTime(rangeEnd)}</strong>
@@ -421,45 +423,79 @@ function renderFloatPanel(highlights, chatTimes, videoId, vodDurationSec, rangeS
     }
 
     // ── 슬라이더 인터랙션 ──
-    const sliderStart    = document.getElementById('CHZZK_RANGE_START');
-    const sliderEnd      = document.getElementById('CHZZK_RANGE_END');
-    const startValEl     = document.getElementById('CHZZK_START_VAL');
-    const endValEl       = document.getElementById('CHZZK_END_VAL');
-    const previewEl      = document.getElementById('CHZZK_RANGE_PREVIEW');
+    const sliderStart = document.getElementById('CHZZK_RANGE_START');
+    const sliderEnd   = document.getElementById('CHZZK_RANGE_END');
+    const startValEl  = document.getElementById('CHZZK_START_VAL');
+    const endValEl    = document.getElementById('CHZZK_END_VAL');
+    const previewEl   = document.getElementById('CHZZK_RANGE_PREVIEW');
 
     let localStart = rangeStart;
     let localEnd   = rangeEnd;
 
-    function updateSliderUI() {
-        // 시작이 종료를 역전하지 않도록
+    // 시간 문자열 파싱 ("1:23:45" | "5:30" | "330") → 초
+    function parseTimeInput(str) {
+        str = str.trim();
+        const parts = str.split(':').map(Number);
+        if (parts.some(isNaN)) return null;
+        if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        if (parts.length === 2) return parts[0] * 60 + parts[1];
+        if (parts.length === 1) return parts[0];
+        return null;
+    }
+
+    function updateSliderUI(syncInputs = true) {
         if (localStart >= localEnd - 30) {
             localStart = Math.max(0, localEnd - 30);
             sliderStart.value = Math.round((localStart / vodDurationSec) * 100);
         }
-        startValEl.textContent = formatTime(localStart);
-        endValEl.textContent   = formatTime(localEnd);
+        // 슬라이더를 새로 직접 업데이트된 경우에만 text input 동기화
+        if (syncInputs) {
+            startValEl.value = formatTime(localStart);
+            endValEl.value   = formatTime(localEnd);
+        }
+        sliderStart.value = Math.round((localStart / vodDurationSec) * 100);
+        sliderEnd.value   = Math.round((localEnd   / vodDurationSec) * 100);
 
         const inRange = g_allChatTimes.filter(t => t >= localStart && t <= localEnd).length;
         previewEl.innerHTML = `분석 구간: <strong>${formatTime(localStart)}</strong> ~ <strong>${formatTime(localEnd)}</strong>
             <span class="chzzk-fp-range-count">(채팅 ${inRange.toLocaleString()}개)</span>`;
-
-        // 차트에 선택 구간 음영 업데이트
         renderChartCanvas(g_allChatTimes, vodDurationSec, highlights, localStart, localEnd);
     }
 
+    // 슬라이더 입력 → text 동기화
     sliderStart.addEventListener('input', () => {
         localStart = Math.round((sliderStart.value / 100) * vodDurationSec);
-        updateSliderUI();
+        updateSliderUI(true);
     });
     sliderEnd.addEventListener('input', () => {
         localEnd = Math.round((sliderEnd.value / 100) * vodDurationSec);
-        // 종료가 시작을 역전하지 않도록
         if (localEnd <= localStart + 30) {
             localEnd = Math.min(vodDurationSec, localStart + 30);
-            sliderEnd.value = Math.round((localEnd / vodDurationSec) * 100);
         }
-        updateSliderUI();
+        updateSliderUI(true);
     });
+
+    // 텍스트 입력 → 슬라이더 동기화 (Enter 또는 blur 시 적용)
+    function applyTimeInput(el, isStart) {
+        const parsed = parseTimeInput(el.value);
+        if (parsed === null || parsed < 0) { el.value = formatTime(isStart ? localStart : localEnd); return; }
+        const clamped = Math.max(0, Math.min(vodDurationSec, Math.round(parsed)));
+        if (isStart) {
+            localStart = clamped;
+        } else {
+            localEnd = clamped;
+            if (localEnd <= localStart + 30) localEnd = Math.min(vodDurationSec, localStart + 30);
+        }
+        el.value = formatTime(isStart ? localStart : localEnd);
+        updateSliderUI(false); // 텍스트 입력 수동 적용 중이므로 text 재동기화 불필요
+    }
+    startValEl.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyTimeInput(startValEl, true); startValEl.blur(); } });
+    startValEl.addEventListener('blur',    () => applyTimeInput(startValEl, true));
+    endValEl.addEventListener('keydown',   e => { if (e.key === 'Enter') { e.preventDefault(); applyTimeInput(endValEl, false); endValEl.blur(); } });
+    endValEl.addEventListener('blur',      () => applyTimeInput(endValEl, false));
+    // 슬라이더 드래그 중 text input 포커스 해제 방지
+    startValEl.addEventListener('focus', () => startValEl.select());
+    endValEl.addEventListener('focus',   () => endValEl.select());
 
     // ── 재분석 버튼 ──
     document.getElementById('CHZZK_FP_REANALYZE').addEventListener('click', () => {
