@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "치지직 하이라이트 분석기",
+  "version": "1.2",
+  "description": "치지직 VOD 채팅 밀도를 분석하여 하이라이트 구간을 시각화합니다.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://api.chzzk.naver.com/*",
+    "*://chzzk.naver.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chzzk.naver.com/*"
+      ],
+      "css": ["styles.css"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "하이라이트 분석 설정"
+  }
+}

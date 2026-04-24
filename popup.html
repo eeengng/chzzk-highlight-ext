@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>치지직 하이라이트 분석기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 280px;
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      background: #16161c;
+      color: #fff;
+    }
+
+    /* ── 헤더 ── */
+    .popup-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #2a2a35;
+    }
+    .popup-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* ── On/Off 토글 ── */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .toggle-label {
+      font-size: 12px;
+      color: #aaa;
+      min-width: 20px;
+      text-align: right;
+    }
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 24px;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #333;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 3px; top: 3px;
+      width: 18px; height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.25s;
+    }
+    input:checked + .toggle-slider { background: #00ffa3; }
+    input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    /* ── 본문 ── */
+    .popup-body { padding: 14px 16px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      background: #22222c;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus { border-color: #00ffa3; }
+
+    /* ── 저장 버튼 ── */
+    .save-btn {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #00ffa3, #00c97a);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.15s;
+    }
+    .save-btn:hover { opacity: 0.88; }
+
+    .status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #00ffa3;
+      text-align: center;
+      height: 16px;
+    }
+
+    .popup-body.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup-header">
+    <div class="popup-title">⚡ 하이라이트 분석기</div>
+    <div class="toggle-wrap">
+      <span class="toggle-label" id="toggle-text">ON</span>
+      <label class="toggle">
+        <input type="checkbox" id="enabledToggle" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="popup-body" id="popupBody">
+    <div class="form-group">
+      <label class="form-label" for="highlightCount">추출할 하이라이트 개수 (1~50)</label>
+      <input type="number" id="highlightCount" value="20" min="1" max="50">
+    </div>
+
+    <button class="save-btn" id="saveBtn">저장하기</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

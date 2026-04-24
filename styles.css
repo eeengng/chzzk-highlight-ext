@@ -1,0 +1,270 @@
+/* ══════════════════════════════════════════════
+   치지직 하이라이트 분석기 - Injected UI Styles
+   ══════════════════════════════════════════════ */
+
+/* ── FAB 분석 버튼 (우하단 고정) ── */
+.chzzk-highlight-fab {
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 24px !important;
+    z-index: 2147483647 !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #00ffa3, #00c97a);
+    color: #000;
+    border: none;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 255, 163, 0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.chzzk-highlight-fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(0, 255, 163, 0.6);
+}
+.chzzk-highlight-fab:active { transform: translateY(0); }
+.chzzk-fab-icon  { font-size: 16px; }
+
+/* ─────────────────────────────────────────────
+   드래그 가능한 플로팅 패널
+───────────────────────────────────────────── */
+.chzzk-float-panel {
+    position: fixed !important;
+    top: 80px !important;
+    right: 20px !important;
+    width: 360px;
+    z-index: 2147483646 !important;
+    background: rgba(18, 18, 24, 0.96);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* 패널 밖 영역은 클릭 가능 */
+    pointer-events: auto;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* ── 헤더 (드래그 핸들) ── */
+.chzzk-fp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    cursor: grab;
+    user-select: none;
+    flex-shrink: 0;
+}
+.chzzk-fp-header:active { cursor: grabbing; }
+
+.chzzk-fp-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.chzzk-fp-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+}
+.chzzk-fp-meta {
+    font-size: 10px;
+    color: #555;
+}
+
+.chzzk-fp-header-btns {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.chzzk-fp-ctrl {
+    width: 22px;
+    height: 22px;
+    background: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 4px;
+    color: #888;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+.chzzk-fp-ctrl:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+/* ── 바디 (접을 수 있는 영역) ── */
+.chzzk-fp-body {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+/* ── 차트 ── */
+.chzzk-fp-chart-wrap {
+    height: 80px;
+    padding: 6px 10px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+}
+#HIGHLIGHT_CHART {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ── 정렬 레이블 ── */
+.chzzk-fp-sort-label {
+    padding: 6px 12px 2px;
+    font-size: 10px;
+    color: #444;
+    flex-shrink: 0;
+}
+
+/* ── 하이라이트 목록 ── */
+.chzzk-fp-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 8px 10px;
+}
+.chzzk-fp-list::-webkit-scrollbar { width: 4px; }
+.chzzk-fp-list::-webkit-scrollbar-track { background: transparent; }
+.chzzk-fp-list::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+/* ── 아이템 ── */
+.chzzk-fp-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    transition: background 0.12s;
+}
+.chzzk-fp-item:hover { background: rgba(255,255,255,0.08); }
+
+.chzzk-fp-item-rank {
+    font-size: 12px;
+    font-weight: 700;
+    color: #00ffa3;
+    width: 24px;
+    flex-shrink: 0;
+    padding-top: 1px;
+}
+
+.chzzk-fp-item-body { flex: 1; min-width: 0; }
+
+.chzzk-fp-item-times {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.chzzk-fp-sep {
+    font-size: 11px;
+    color: #555;
+}
+.chzzk-fp-clip-len {
+    font-size: 10px;
+    color: #444;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 2px;
+}
+
+.chzzk-fp-item-peak {
+    margin-top: 4px;
+    font-size: 10px;
+    color: #555;
+}
+
+.chzzk-fp-item-density {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ff9060;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+    padding-top: 1px;
+}
+.chzzk-fp-item-density small {
+    font-size: 9px;
+    color: #666;
+    font-weight: 400;
+}
+
+/* ── 타임스탬프 버튼 (치지직 댓글 스타일) ── */
+.chzzk-time-btn,
+.comment_item_time__6KPQu {
+    display: inline-block;
+    padding: 2px 7px;
+    background: rgba(0, 255, 163, 0.10) !important;
+    color: #00ffa3 !important;
+    border: 1px solid rgba(0, 255, 163, 0.25) !important;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Pretendard', 'Noto Sans KR', monospace;
+    cursor: pointer !important;
+    transition: background 0.15s, border-color 0.15s;
+    text-decoration: none !important;
+    line-height: 1.6;
+}
+.chzzk-time-btn:hover,
+.comment_item_time__6KPQu:hover {
+    background: rgba(0, 255, 163, 0.20) !important;
+    border-color: rgba(0, 255, 163, 0.55) !important;
+}
+
+/* ── 빈 상태 ── */
+.chzzk-fp-empty {
+    padding: 24px 12px;
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+}
+
+/* ── 로딩 오버레이 ── */
+.chzzk-loading-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483647 !important;
+    background: rgba(0,0,0,0.82);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: #fff;
+}
+.chzzk-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255,255,255,0.08);
+    border-left-color: #00ffa3;
+    border-radius: 50%;
+    animation: chzzk-spin 0.9s linear infinite;
+}
+@keyframes chzzk-spin { to { transform: rotate(360deg); } }
+.chzzk-loading-text {
+    font-size: 13px;
+    font-family: 'Pretendard', sans-serif;
+    color: #aaa;
+}
