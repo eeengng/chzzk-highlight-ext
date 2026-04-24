@@ -110,8 +110,10 @@
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - 140px);
-    overflow: hidden;
+    overflow-y: auto;  /* hidden → auto: 필터 패널이 열려도 스크롤 가능 */
+    overflow-x: hidden;
 }
+.chzzk-fp-body::-webkit-scrollbar { width: 0; }  /* 바디 스크롤바는 숨김 */
 
 /* ── 차트 ── */
 .chzzk-fp-chart-wrap {
@@ -239,6 +241,168 @@
     text-align: center;
     color: #555;
     font-size: 12px;
+}
+
+/* ─────────────────────────────────────────────
+   구간 필터 UI
+───────────────────────────────────────────── */
+/* 토글 버튼 행 */
+.chzzk-fp-filter-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+.chzzk-fp-filter-toggle {
+    flex: 1;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 6px;
+    color: #aaa;
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.chzzk-fp-filter-toggle:hover { background: rgba(255,255,255,0.10); color: #fff; }
+.chzzk-fp-filter-toggle.active {
+    background: rgba(255,220,60,0.10);
+    border-color: rgba(255,220,60,0.35);
+    color: #ffd93d;
+}
+.chzzk-fp-filter-reset {
+    padding: 5px 8px;
+    background: rgba(255,80,80,0.10);
+    border: 1px solid rgba(255,80,80,0.25);
+    border-radius: 6px;
+    color: #ff8080;
+    font-size: 10px;
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+.chzzk-fp-filter-reset:hover { background: rgba(255,80,80,0.22); }
+
+/* 필터 뱃지 (헤더 메타) */
+.chzzk-fp-filter-badge {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 5px;
+    background: rgba(255,220,60,0.15);
+    border: 1px solid rgba(255,220,60,0.35);
+    border-radius: 3px;
+    color: #ffd93d;
+    font-size: 9px;
+    vertical-align: middle;
+}
+
+/* 필터 패널 (접힘/펼침) */
+.chzzk-fp-filter-panel {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.chzzk-fp-filter-panel.hidden { display: none !important; }
+
+.chzzk-fp-filter-desc {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 슬라이더 행 */
+.chzzk-fp-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.chzzk-fp-slider-label {
+    font-size: 10px;
+    color: #666;
+    width: 24px;
+    flex-shrink: 0;
+}
+.chzzk-fp-slider-val {
+    font-size: 11px;
+    color: #00ffa3;
+    font-weight: 600;
+    width: 44px;
+    flex-shrink: 0;
+    text-align: right;
+    font-family: monospace;
+}
+
+/* Range 슬라이더 커스텀 스타일 */
+.chzzk-range-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.12);
+    outline: none;
+    cursor: pointer;
+}
+.chzzk-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffa3;
+    border: 2px solid rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.chzzk-range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 6px rgba(0,255,163,0.5);
+}
+.chzzk-range-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffa3;
+    border: 2px solid rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+
+/* 구간 미리보기 */
+.chzzk-fp-filter-range-preview {
+    font-size: 11px;
+    color: #777;
+    text-align: center;
+    padding: 4px 0 0;
+}
+.chzzk-fp-filter-range-preview strong { color: #ffd93d; }
+.chzzk-fp-range-count { font-size: 10px; color: #555; margin-left: 4px; }
+
+/* 재분석 버튼 */
+.chzzk-fp-reanalyze-btn {
+    width: 100%;
+    padding: 7px;
+    background: linear-gradient(135deg, rgba(0,255,163,0.15), rgba(0,201,122,0.15));
+    border: 1px solid rgba(0,255,163,0.35);
+    border-radius: 6px;
+    color: #00ffa3;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.chzzk-fp-reanalyze-btn:hover {
+    background: linear-gradient(135deg, rgba(0,255,163,0.25), rgba(0,201,122,0.25));
+    border-color: rgba(0,255,163,0.6);
 }
 
 /* ── 로딩 오버레이 ── */
